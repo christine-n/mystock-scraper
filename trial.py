@@ -1,6 +1,6 @@
 import requests
 import pprint
-import sys
+# import sys
 from bs4 import BeautifulSoup
 
 
@@ -10,13 +10,19 @@ page = requests.get(URL)
 pp = pprint.PrettyPrinter(indent=4)
 soup = BeautifulSoup(page.content, 'html5lib')
 results = soup.find(id='pricelist')
+# print(results.prettify())
 tr = results.find_all('tr', class_='row')
 
-
+category = ''
 for i in tr:
+    print('\n\n')
     price = 0
     name = ''
     volume = 0
+
+    td = i.find('td', class_='b2')
+    if td:
+        category = td.text
 
     nm = i.find(lambda tag: tag.name == 'a')
     if nm:
@@ -29,7 +35,7 @@ for i in tr:
     n = i.find(lambda tag: tag.name == 'td' and tag.get('class') == ['n'])
     if n:
         volume = n.text
-    print('Name {}  Price {}  Volume {}'.format(name, price, volume))
+    print('Name {}  Price {}  Volume {}  Category {}'.format(name, price, volume, category))
 
 
 
